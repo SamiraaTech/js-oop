@@ -66,6 +66,39 @@ Create a ElectricCar class that extends the Car class.
 Add a batteryLevel property and a method chargeBattery() that increases the battery level.
 Demonstrate method overriding by redefining the startEngine() method to include a message about battery status. */
 
+function ElectricCar(model, make, year, batteryLevel) {
+  Car.call(this, make, model, year);
+
+  this.batteryLevel = batteryLevel;
+
+  this.chargeBattery = function () {
+    this.batteryLevel += 10;
+    console.log(
+      `Battery charged. Current battery level: ${this.batteryLevel}%`
+    );
+  };
+
+  this.startEngine = function () {
+    if (batteryLevel > 0) {
+      console.log(
+        `The ${this.year} ${this.make} ${this.model}  's electric engine is starting. Battery level: ${this.batteryLevel}%.`
+      );
+    } else {
+      console.log(`Battery is dead. Please charge the battery.`);
+    }
+  };
+}
+
+// Make ElectricCar inherit the prototype of Car
+ElectricCar.prototype = Object.create(Car.prototype);
+ElectricCar.prototype.constructor = ElectricCar;
+
+const myElectricalCar = new ElectricCar("Tesla", "Model 3", 2023, 40);
+
+myElectricalCar.startEngine();
+myElectricalCar.chargeBattery();
+myElectricalCar.startEngine();
+
 // 03
 /* Encapsulation:
 Add private properties to the Car class using the # prefix (e.g., #engineStatus).
