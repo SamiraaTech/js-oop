@@ -1,3 +1,9 @@
+/*
+----------------------------
+Mosh exercise
+----------------------------
+*/
+
 //STOPWATCH
 
 function Stopwatch() {
@@ -36,6 +42,12 @@ function Stopwatch() {
 
 const sw = new Stopwatch(10);
 
+/* 
+---------------------------------
+OOP Practice & Challenges
+---------------------------------
+*/
+
 // 01
 /* Create a Simple Class: 
 Define a Car class with properties like make, model, and year.
@@ -46,18 +58,43 @@ Instantiate the class and call the method. */
 function Car(make, model, year) {
   (this.make = make), (this.model = model), (this.year = year);
 
+  //03
+  // Private property (using closure)
+  let _engineStatus = false; // Private engine status
+
   this.startEngine = function () {
     console.log(
       `The ${this.year} ${this.make} ${this.model}'s engine is starting.`
     );
   };
+
+  Object.defineProperty(this, "engineStatus", {
+    get: function () {
+      return _engineStatus;
+    },
+    set: function (status) {
+      if (typeof status === "boolean") {
+        _engineStatus = status;
+      } else {
+        throw new Error(
+          "Invalid value for engine status. Must be true or false."
+        );
+      }
+    },
+  });
 }
 
 // Instantiating the Car object
-const mycar = new Car("Toyota", "Corolla", 2022);
+const myCar = new Car("Toyota", "Corolla", 2022);
 
 // Calling the startEngine method
-mycar.startEngine();
+myCar.startEngine();
+
+// Accessing and modifying the private property using the getter and setter
+console.log(myCar.engineStatus);
+myCar.engineStatus = true;
+console.log(myCar.engineStatus);
+myCar.engineStatus = false;
 
 // 02
 /*
@@ -109,6 +146,49 @@ Provide getter and setter methods for accessing and updating these properties. *
 Polymorphism:
 Implement polymorphism by creating a Vehicle superclass and having Car and Bike classes inherit from it.
 Add a common method move() that behaves differently depending on the vehicle type. */
+
+function Vehicle(make, model) {
+  this.make = make;
+  this.model = model;
+}
+
+Vehicle.prototype.move = function () {
+  console.log(`This ${this.make} ${this.model} is moving.`);
+};
+
+function Car(make, model, year) {
+  this.year = year;
+  Vehicle.call(this, make, model);
+}
+
+// Set the Car prototype to inherit from Vehicle
+Car.prototype = Object.create(Vehicle.prototype);
+Car.prototype.constructor = Car;
+
+// Override the move() method in Car
+Car.prototype.move = function () {
+  console.log(
+    `This ${this.make} ${this.model} ${this.year} is driving on the road.`
+  );
+};
+
+function Bike(make, model, type) {
+  this.type = type;
+  Vehicle.call(this, make, model);
+}
+
+// Set the Bike prototype to inherit from Vehicle
+Bike.prototype = Object.create(Vehicle.prototype);
+Bike.prototype.constructor = Bike;
+
+// Override the move() method in Bike
+Bike.prototype.move = function () {
+  console.log(`The ${this.make} ${this.model} bike is pedaling on the path.`);
+};
+
+// Instantiate objects for Car and Bike
+const ownCar = new Car("Toyota", "Corolla", 2023);
+const myBike = new Bike("Giant", "Escape", "road");
 
 // 05
 /* Composition:
